@@ -11,9 +11,24 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'npm install'
+                // Pull the Node Docker image
+                script {
+                    docker.image('node:lts-buster-slim').pull()
+                }
             }
         }
+        
+        stage('Run Docker Container') {
+            steps {
+                // Run the Node Docker container
+                script {
+                    docker.container('my-node-app') {
+                        // Inside the container, clone or copy your Node.js and React application
+                        // Replace the following command with your actual build command
+                        sh 'npm install && npm run build'
+                    }
+                }
+            }
         stage('Test') {
             steps {
                 sh './jenkins/scripts/test.sh'
